@@ -66,7 +66,7 @@
               <button onclick="window.location.reload();" class="btn" id="submit">Bid Now</button>
 
               <!-- Clock -->
-              <h1 class="clock-h1" id="clock-heading">Time Left!</h1>
+              <!-- <h1 class="clock-h1" id="clock-heading">Time Left!</h1>
 <div id="clockdiv">
   <div>
     <span class="days"></span>
@@ -84,7 +84,7 @@
     <span class="seconds"></span>
     <div class="smalltext">Seconds</div>
   </div>
-</div>
+</div> -->
             </div>
           </div>
 
@@ -140,143 +140,6 @@
 
     </div>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-analytics.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyCwcXkAZoIfiQfc7iqAFpoa3-a5_cElLHg",
-        authDomain: "loginweb-34cad.firebaseapp.com",
-        databaseURL: "https://loginweb-34cad-default-rtdb.firebaseio.com",
-        projectId: "loginweb-34cad",
-        storageBucket: "loginweb-34cad.appspot.com",
-        messagingSenderId: "178607050995",
-        appId: "1:178607050995:web:0071ffb26a6c5e54236786",
-        measurementId: "G-K3XZRNGCK7",
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-
-      import {
-        getDatabase,
-        ref,
-        set,
-        get,
-        child,
-        update,
-        remove,
-      } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-database.js";
-
-      const db = getDatabase();
-
-      // Get a reference to the database service
-      var bid_price = document.getElementById("bid-price");
-      var submit = document.getElementById("submit");
-      var last_bid = document.getElementById("last-bid");
-
-      //Select Data Function
-      function SelectData() {
-        const dbref = ref(db);
-
-        get(child(dbref, "Products" + "/" + "Product-1")).then((snapshot) => {
-          if(snapshot.exists()){
-            last_bid.value = snapshot.val().BidPrice;
-          }
-          else{
-            last_bid.value = "No Bid Yet";
-          }
-          })
-          .catch((error) => {
-            alert("Error: " + error);
-          });
-      }
-
-      // Insert Data Function
-      function insertData() {
-        set(ref(db, "Products" + "/" + "Product-1"), {
-          BidPrice: bid_price.value,
-        })
-          .then(() => {
-            alert("Bid Successfull");
-          })
-          .catch((error) => {
-            alert("Error: " + error);
-          });
-      }
-      
-      // Assign Event Listener to the Submit Button
-      submit.addEventListener("click", SelectData);
-      submit.addEventListener("click", insertData);
-      window.onload = function () {
-        SelectData();
-      };
-
-      const d = new Date();
-      let UTC_hours = d.getUTCHours();
-      let UTC_minutes = d.getUTCMinutes();
-      let IND_hours = UTC_hours + 5;
-      let UTC_time = (UTC_hours+5) + ":" + (UTC_minutes+30);
-
-      if(IND_hours > 10 && IND_hours < 17){
-        alert("Bidding is open");
-        document.getElementById("submit").disabled = false;
-        // document.getElementById("clockdiv").disabled = false;
-        initializeClock('clockdiv', IND_hours);
-      }
-      else{
-        alert("Bidding is closed");
-        document.getElementById("submit").disabled = true;
-        // document.getElementById("clockdiv").style.display="none";
-        // document.getElementById("clock-heading").style.display="none";
-      }
-
-      //clock
-      function getTimeRemaining(endtime) {
-  const total = Date.parse(endtime) - Date.parse(new Date());
-  const seconds = Math.floor((total / 1000) % 60);
-  const minutes = Math.floor((total / 1000 / 60) % 60);
-  const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(total / (1000 * 60 * 60 * 24));
-  
-  return {
-    total,
-    days,
-    hours,
-    minutes,
-    seconds
-  };
-}
-
-function initializeClock(id, endtime) {
-  const clock = document.getElementById(id);
-  const daysSpan = clock.querySelector('.days');
-  const hoursSpan = clock.querySelector('.hours');
-  const minutesSpan = clock.querySelector('.minutes');
-  const secondsSpan = clock.querySelector('.seconds');
-
-  function updateClock() {
-    const t = getTimeRemaining(endtime);
-
-    daysSpan.innerHTML = t.days;
-    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
-    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
-
-    if (t.total <= 0) {
-      clearInterval(timeinterval);
-    }
-  }
-
-  updateClock();
-  const timeinterval = setInterval(updateClock, 1000);
-}
-
-const deadline = new Date(Date.parse(new Date()) + 4 * 60 * 60 * 1000);
-initializeClock('clockdiv', deadline);
-
-    </script>
 
 </body>
 </html>
